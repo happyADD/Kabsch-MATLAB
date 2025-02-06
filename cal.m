@@ -1,5 +1,5 @@
 %Kabsch func
-function [matrix,det_R] = cal(point_num,points,points_measure,R,T)
+function [diff_R,diff_T,det_R] = cal(point_num,points,points_measure,R,T)
 n = point_num;
 ps_r = points';
 ps_m = points_measure';
@@ -26,9 +26,11 @@ det_R = det(R);
 
 T_cal = p_m - R*p_r;
 
+R_diff = R * R_cal';
+theta = acos((trace(R_diff) - 1) / 2);
+diff_R = rad2deg(theta); % 将弧度转换为度
 
-real_matrix = [R,T;0,0,0,1];
-measure_matrix = [R_cal,T_cal;0,0,0,1];
+trans_diff = T - T_cal;
+diff_T = norm(trans_diff); % 欧几里得范数
 
-matrix = real_matrix - measure_matrix;
 end
